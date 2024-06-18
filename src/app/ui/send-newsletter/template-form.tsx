@@ -5,6 +5,13 @@ import Preview from "./preview";
 import { Customer, Input, Template } from "@/app/lib/definitions";
 import { sendNewsletter } from "@/app/lib/actions";
 import { clsx } from "clsx";
+import { useFormState } from "react-dom";
+import toast from "react-hot-toast";
+
+type ActionPayload = {
+  templateId: string;
+  customers: string[];
+};
 
 function TemplateForm({
   templates,
@@ -16,13 +23,18 @@ function TemplateForm({
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const template = templates?.find((t) => t.id === selectedTemplateId) || null;
   const [formState, setFormState] = useState({});
-
-  const actionPayload = {
+  const actionPayload: ActionPayload = {
     templateId: selectedTemplateId,
     customers: [...customers.filter((c) => c.checked).map((c) => c.email)],
   };
-
   const sendNewsletterBound = sendNewsletter.bind(null, actionPayload);
+  // types not matching
+  const initialState: any = {
+    message: "",
+    errors: {},
+  };
+
+  const [state, dispatch] = useFormState(sendNewsletterBound, initialState);
 
   useEffect(() => {
     if (template) {
@@ -39,6 +51,12 @@ function TemplateForm({
       setFormState(state);
     } else setFormState({});
   }, [template]);
+
+  useEffect(() => {
+    if (state?.message && state?.errors) {
+      toast.error(state?.message);
+    }
+  }, [state]);
 
   const handleFormChange = (e: any) => {
     const name = e.target.name;
@@ -73,7 +91,7 @@ function TemplateForm({
             );
           })}
         </select>
-        <form action={sendNewsletterBound}>
+        <form action={dispatch}>
           <div className="flex flex-col gap-4 py-4  text-white ">
             {template?.inputs?.map((input, i) => {
               if (input.type === "text-area") {

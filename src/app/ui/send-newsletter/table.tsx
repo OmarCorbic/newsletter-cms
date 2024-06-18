@@ -13,7 +13,7 @@ function Table({
   return (
     <table className=" hidden min-w-full  text-gray-900 md:block text-left rounded-lg bg-slate-900">
       <thead className="rounded-lg block w-full  top-0 left-0 text-left text-sm font-normal text-white">
-        <tr className="flex w-full items-center">
+        <tr className="grid grid-cols-4 grid-rows-1 w-full items-center justify-items-start">
           <th className=" w-14 flex items-center justify-center font-medium">
             <input
               onChange={(e) => checkAll(e.target.checked)}
@@ -22,13 +22,13 @@ function Table({
               name="check-all"
             />
           </th>
-          <th className="px-3 flex-grow flex items-center justify-center py-4 font-medium ">
+          <th className="px-3 flex items-center justify-center py-4 font-medium ">
             Customer
           </th>
-          <th className="px-3 flex-grow flex items-center justify-center py-4 font-medium">
+          <th className="px-3 flex items-center justify-center py-4 font-medium">
             Email
           </th>
-          <th className="px-3 flex-grow flex items-center justify-center py-4 font-medium">
+          <th className="px-3 flex items-center justify-center py-4 font-medium">
             Company
           </th>
         </tr>
@@ -47,7 +47,7 @@ function Table({
           customers?.map((customer) => (
             <tr
               key={customer.id}
-              className="w-full  border-b  text-sm flex items-center"
+              className="w-full   border-b  text-sm grid grid-cols-4 grid-rows-1 items-center justify-items-start"
             >
               <td className="whitespace-nowrap  w-14 flex items-center py-3 justify-center ">
                 <input
@@ -57,13 +57,13 @@ function Table({
                   type="checkbox"
                 />
               </td>
-              <td className="px-3 flex-grow flex items-center justify-center py-3 font-medium">
+              <td className="px-3  flex items-center justify-center py-3 font-medium">
                 {customer.name}
               </td>
-              <td className="px-3 flex-grow flex items-center justify-center py-3 font-medium">
+              <td className="px-3  flex items-center justify-center py-3 font-medium">
                 {customer.email}
               </td>
-              <td className="px-3 flex-grow flex items-center justify-center py-3 font-medium">
+              <td className="px-3  flex items-center justify-center py-3 font-medium">
                 {customer.company}
               </td>
             </tr>

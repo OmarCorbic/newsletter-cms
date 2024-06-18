@@ -1,13 +1,17 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { logout, signIn } from "./auth";
-import { z } from "zod";
 import { fetchSingleTemplateHTML } from "./data";
-import { Input } from "./definitions";
-import DOMPurify from "isomorphic-dompurify";
 import { injectDataIntoHTML } from "./utils";
+import { logout, signIn } from "./auth";
+import { redirect } from "next/navigation";
 import { sendMail } from "./mail";
+import DOMPurify from "isomorphic-dompurify";
+import { z } from "zod";
+
+type State = {
+  message: string;
+  errors: any;
+};
 
 type ActionPayload = {
   templateId: string;
@@ -46,6 +50,7 @@ export async function signOut() {
 
 export async function sendNewsletter(
   actionPayload: ActionPayload,
+  _currentState: State,
   formData: FormData
 ) {
   const validatedPayload = ActionPayloadSchema.safeParse(actionPayload);
@@ -53,7 +58,7 @@ export async function sendNewsletter(
     console.log(validatedPayload.error.flatten().fieldErrors);
     return {
       errors: validatedPayload.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to Create Invoice.",
+      message: "Missing Fields. Failed to Send Newsletter",
     };
   }
 
@@ -79,7 +84,7 @@ export async function sendNewsletter(
       console.log(validatedFormData.error.flatten().fieldErrors);
       return {
         errors: validatedFormData.error.flatten().fieldErrors,
-        message: "Missing Fields. Failed to Create Invoice.",
+        message: "Missing Fields. Failed to Send Newsletter.",
       };
     }
 
@@ -94,12 +99,11 @@ export async function sendNewsletter(
       }
     }
 
-    console.log(customers);
     const readyToSendHTML = injectDataIntoHTML(data, html);
     try {
       await sendMail(readyToSendHTML, customers);
     } catch (error: any) {
-      console.log(error.message);
+      return { message: "Failed to send newsletter" };
     }
   } catch (error: any) {
     console.log(error);

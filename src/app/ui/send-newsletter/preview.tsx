@@ -66,7 +66,7 @@ function Preview({
             <HiOutlineArrowUpOnSquareStack size={100} />
           </div>
           <p className=" text-center font-bold text-lg">
-            Preview will show after you choose a template or a preset
+            Preview will be shown after you choose a template or a preset
           </p>
         </div>
       </div>
