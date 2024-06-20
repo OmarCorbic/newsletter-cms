@@ -73,7 +73,7 @@ function TemplateForm({
 
   return (
     <>
-      <div className="w-1/3 bg-slate-950 rounded-lg  p-5 overflow-y-auto">
+      <div className="w-1/3 bg-slate-950 rounded-lg  p-5 overflow-y-auto text-black">
         <select
           className="w-full py-2 px-3 rounded-sm font-medium text-lg cursor-pointer"
           defaultValue=""
