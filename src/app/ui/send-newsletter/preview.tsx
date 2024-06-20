@@ -56,6 +56,8 @@ function Preview({
       });
 
       previewRef.current.innerHTML = sanitizedHTML;
+    } else if (templateHTML) {
+      previewRef.current.innerHTML = templateHTML;
     }
   });
   return (
