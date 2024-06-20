@@ -5,7 +5,6 @@ import NavLinks from "./nav-links";
 import { IoLogOutOutline } from "react-icons/io5";
 import { useState } from "react";
 import clsx from "clsx";
-import { logout } from "@/app/lib/auth";
 import { signOut } from "@/app/lib/actions";
 
 function SideNav() {
@@ -20,7 +19,7 @@ function SideNav() {
       <div className="relative flex mt-auto items-center  justify-between px-3  bg-slate-950  py-2">
         <div
           className={clsx(
-            `absolute bg-blue-950 duration-200 bottom-full origin-top transform w-full  justify-center overflow-hidden h-full flex  left-0 flex-col`,
+            `absolute bg-blue-950 duration-200 bottom-full origin-top transform w-full  justify-center overflow-hidden flex  left-0 flex-col`,
             { "h-full ": showSettings, "h-0 ": !showSettings }
           )}
         >
