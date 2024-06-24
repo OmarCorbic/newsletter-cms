@@ -16,6 +16,7 @@ export type Customer = {
 export type Input = {
   type: "text" | "text-area" | "date";
   name: string;
+  originalTag: string;
   placeholder?: string;
 };
 
