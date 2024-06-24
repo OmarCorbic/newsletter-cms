@@ -1,16 +1,101 @@
-import puppeteer from "puppeteer";
+import puppeteer, { Page } from "puppeteer";
 import { join } from "path";
+import { Input } from "./definitions";
 
-export const htmltopng = async (html: string, fileName: string) => {
+export async function htmlToPng(html: string, fileName: string, page?: Page) {
+  if (!page) {
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+
+    await page.setContent(html);
+
+    const filePath = join(process.cwd(), "public", "templates", fileName);
+    await page.screenshot({ path: filePath, fullPage: true });
+
+    await browser.close();
+  } else {
+    await page.setContent(html);
+
+    const filePath = join(process.cwd(), "public", "templates", fileName);
+    await page.screenshot({ path: filePath, fullPage: true });
+  }
+}
+
+export async function extractInputsFromHTML(
+  htmlString: string,
+  templateId?: string
+) {
   const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
-  //
-  await page.setContent(html);
+  await page.setContent(htmlString);
 
-  // Take a screenshot and save it as an image
-  const filePath = join(process.cwd(), "public", "templates", fileName);
-  await page.screenshot({ path: filePath, fullPage: true });
+  const inputs = await page.evaluate(() => {
+    const regex = /{{(.*)}}/gi;
+    const elements = Array.from(
+      document.querySelectorAll("p, div, h1, h2, h3, h4,h5, a, li")
+    );
 
+    if (!elements) return [];
+
+    const candidateElements = elements
+      ?.map((element) => ({
+        tag: element.tagName,
+        html: element.outerHTML,
+      }))
+      .filter((element: { tag: string; html: string }) =>
+        /{{.*}}/gi.test(element.html)
+      );
+
+    const textAreaTypes = ["p", "div"];
+    const textTypes = ["h1", "h2", "h3", "h4", "h5", "a", "li"];
+    const placeholders: any = {
+      li: "List item",
+      div: "Text",
+      p: "Paragraph",
+      h1: "Heading 1",
+      h2: "Heading 2",
+      h3: "Heading 3",
+      h4: "Heading 4",
+      h5: "Heading 5",
+      a: "Link",
+    };
+
+    const inputs = candidateElements.map(
+      (element: { tag: string; html: string }) => {
+        const name = Array.from(element.html.matchAll(regex)).map(
+          (match) => match[1]
+        )[0];
+
+        const input: Input = {
+          type: "text",
+          name: name || "",
+          originalTag: element.tag.toLowerCase() || "",
+          placeholder: placeholders[element.tag.toLowerCase()] || "Text",
+        };
+
+        if (textAreaTypes.includes(element.tag.toLowerCase())) {
+          input.type = "text-area";
+        } else if (textTypes.includes(element.tag.toLowerCase())) {
+          input.type = "text";
+        }
+
+        return input;
+      }
+    );
+
+    return inputs;
+  });
+
+  if (templateId) {
+    try {
+      await htmlToPng(htmlString, `${templateId}.png`, page);
+    } catch (error) {
+      console.log(error);
+      throw new Error("Something went wrong. Please try again later");
+    }
+  }
+  console.log(inputs);
   await browser.close();
-};
+  return inputs;
+}
