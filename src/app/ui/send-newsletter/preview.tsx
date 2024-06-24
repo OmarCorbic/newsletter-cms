@@ -4,6 +4,9 @@ import { HiOutlineArrowUpOnSquareStack } from "react-icons/hi2";
 import DOMPurify from "isomorphic-dompurify";
 
 const ALLOWED_TAGS: string[] = [
+  "ol",
+  "ul",
+  "li",
   "p",
   "b",
   "i",
