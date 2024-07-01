@@ -33,7 +33,7 @@ export async function extractInputsFromHTML(
   const inputs = await page.evaluate(() => {
     const regex = /{{(.*)}}/gi;
     const elements = Array.from(
-      document.querySelectorAll("p, div, h1, h2, h3, h4,h5, a, li")
+      document.querySelectorAll("p, h1, h2, h3, h4,h5, a, li")
     );
 
     if (!elements) return [];
@@ -47,11 +47,10 @@ export async function extractInputsFromHTML(
         /{{.*}}/gi.test(element.html)
       );
 
-    const textAreaTypes = ["p", "div"];
+    const textAreaTypes = ["p"];
     const textTypes = ["h1", "h2", "h3", "h4", "h5", "a", "li"];
     const placeholders: any = {
       li: "List item",
-      div: "Text",
       p: "Paragraph",
       h1: "Heading 1",
       h2: "Heading 2",
@@ -87,15 +86,23 @@ export async function extractInputsFromHTML(
     return inputs;
   });
 
+  console.log(inputs);
+  const hasDuplicates =
+    new Set(inputs.map((input: Input) => input.name)).size !== inputs.length;
+
+  if (hasDuplicates) {
+    await browser.close();
+    throw new Error("You must use different name for every dynamic field");
+  }
+
   if (templateId) {
     try {
       await htmlToPng(htmlString, `${templateId}.png`, page);
     } catch (error) {
       console.log(error);
-      throw new Error("Something went wrong. Please try again later");
     }
   }
-  console.log(inputs);
+
   await browser.close();
   return inputs;
 }
