@@ -19,13 +19,6 @@ export async function sendMail(html: string, recievers: string[] | string) {
     html: html,
   };
 
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.log(error);
-      throw new Error("There was an issue sending your message. ");
-    } else {
-      console.log("Email sent:", info.response);
-      throw new Error("Your message has been successfully sent.");
-    }
-  });
+  const result = await transporter.sendMail(mailOptions);
+  console.log("Mail result: ", result);
 }
