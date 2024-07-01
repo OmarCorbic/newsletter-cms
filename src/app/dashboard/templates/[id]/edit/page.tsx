@@ -1,6 +1,6 @@
 import { fetchTemplateById } from "@/app/lib/data";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import EditWrapper from "@/app/ui/templates/edit-wrapper";
+import EditForm from "@/app/ui/templates/edit-form";
 
 async function Page({ params }: { params: { id: string } }) {
   const id = params.id;
@@ -13,7 +13,7 @@ async function Page({ params }: { params: { id: string } }) {
           { label: "Edit", href: `/dashboard/templates/${id}/edit` },
         ]}
       />
-      <EditWrapper template={template} />
+      <EditForm template={template} />
     </main>
   );
 }
