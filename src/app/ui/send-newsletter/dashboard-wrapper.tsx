@@ -17,46 +17,57 @@ function DashboardWrapper({
   templates: Template[];
   presets: Preset[];
 }) {
-  const [selectedCustomers, setSelectedCustomers] = useState(
-    customers.map((customer) => ({ ...customer, checked: false }))
-  );
+  const [checkedCustomers, setCheckedCustomers] = useState<
+    { id: string; email: string }[]
+  >([]);
 
-  useEffect(() => {
-    setSelectedCustomers(
-      customers.map((customer) => ({ ...customer, checked: false }))
-    );
-  }, [customers]);
   const checkAll = (checked: boolean) => {
-    setSelectedCustomers((prev) =>
-      prev.map((c) => ({ ...c, checked: checked }))
-    );
+    setCheckedCustomers((prev) => {
+      if (checked) {
+        const newChecked = [...prev];
+        customers.forEach((customer) => {
+          if (!newChecked.find((c) => customer.id === c.id)) {
+            newChecked.push({ id: customer.id, email: customer.email });
+          }
+        });
+        return newChecked;
+      } else {
+        return prev.filter(
+          (c) => !customers.find((customer) => customer.id === c.id)
+        );
+      }
+    });
   };
 
   const checkSingle = (id: string) => {
-    setSelectedCustomers((prev) => {
-      let newCustomers = prev.map((customer, i, arr) => {
-        if (customer.id === id) {
-          return { ...customer, checked: !customer.checked };
+    setCheckedCustomers((prev) => {
+      if (!prev.find((c) => c.id === id)) {
+        const selectedCustomer = customers.find((c) => c.id === id);
+        if (selectedCustomer) {
+          return [...prev, selectedCustomer];
         }
-        return customer;
-      });
-
-      return newCustomers;
+      } else {
+        return prev.filter((c) => c.id !== id);
+      }
+      return prev;
     });
   };
+
   return (
     <>
       <Search placeholder="Search customers" />
       <CustomerGroups groups={groups} />
       <Table
-        customers={selectedCustomers}
+        checked={checkedCustomers}
+        customers={customers}
         checkAll={checkAll}
         checkSingle={checkSingle}
       />
+
       <ChooseTemplate
         templates={templates}
         presets={presets}
-        customers={selectedCustomers}
+        customers={checkedCustomers}
       />
     </>
   );

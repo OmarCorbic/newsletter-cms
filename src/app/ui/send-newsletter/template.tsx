@@ -10,7 +10,7 @@ export default function ChooseTemplate({
   templates,
   presets,
 }: {
-  customers: Customer[];
+  customers: { id: string; email: string }[];
   templates: Template[];
   presets: Preset[];
 }) {

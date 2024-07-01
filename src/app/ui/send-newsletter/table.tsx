@@ -2,10 +2,12 @@
 import { LuSearchX } from "react-icons/lu";
 
 function Table({
+  checked,
   customers,
   checkAll,
   checkSingle,
 }: {
+  checked: { id: string; email: string }[];
   customers: any[];
   checkAll: (checked: boolean) => void;
   checkSingle: (id: string) => void;
@@ -19,6 +21,14 @@ function Table({
               onChange={(e) => checkAll(e.target.checked)}
               className="w-4 h-4"
               type="checkbox"
+              checked={
+                customers.find(
+                  (customer) =>
+                    !checked.find((checked) => checked.id === customer.id)
+                )
+                  ? false
+                  : true
+              }
               name="check-all"
             />
           </th>
@@ -53,7 +63,11 @@ function Table({
                 <input
                   onChange={() => checkSingle(customer.id)}
                   className="w-4 h-4"
-                  checked={customer.checked}
+                  checked={
+                    checked.find((checked) => checked.id === customer.id)
+                      ? true
+                      : false
+                  }
                   type="checkbox"
                 />
               </td>

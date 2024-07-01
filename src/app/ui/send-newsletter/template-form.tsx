@@ -5,7 +5,7 @@ import Preview from "./preview";
 import { Customer, Input, Template } from "@/app/lib/definitions";
 import { sendNewsletter } from "@/app/lib/actions";
 import { clsx } from "clsx";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import toast from "react-hot-toast";
 
 type ActionPayload = {
@@ -18,14 +18,14 @@ function TemplateForm({
   customers,
 }: {
   templates: Template[];
-  customers: Customer[];
+  customers: { id: string; email: string }[];
 }) {
   const [selectedTemplateId, setSelectedTemplateId] = useState("");
   const template = templates?.find((t) => t.id === selectedTemplateId) || null;
   const [formState, setFormState] = useState({});
   const actionPayload: ActionPayload = {
     templateId: selectedTemplateId,
-    customers: [...customers.filter((c) => c.checked).map((c) => c.email)],
+    customers: [...customers.map((c) => c.email)],
   };
   const sendNewsletterBound = sendNewsletter.bind(null, actionPayload);
   // types not matching
@@ -35,6 +35,7 @@ function TemplateForm({
   };
 
   const [state, dispatch] = useFormState(sendNewsletterBound, initialState);
+  const { pending } = useFormStatus();
 
   useEffect(() => {
     if (template) {
@@ -53,8 +54,12 @@ function TemplateForm({
   }, [template]);
 
   useEffect(() => {
-    if (state?.message && state?.errors) {
-      toast.error(state?.message);
+    if (!state || !state.message) return;
+
+    if (!state.success) {
+      toast.error(state.message);
+    } else if (state.success) {
+      toast.success(state.message);
     }
   }, [state]);
 
@@ -106,6 +111,13 @@ function TemplateForm({
                       placeholder={input.placeholder ?? ""}
                       onChange={handleFormChange}
                     ></textarea>
+                    <p className="text-red-500">
+                      {state?.errors &&
+                      Object.hasOwn(state?.errors, input.name) &&
+                      state?.errors[input.name].at(0)
+                        ? state?.errors[input.name].at(0)
+                        : null}
+                    </p>
                   </>
                 );
               } else {
@@ -120,13 +132,20 @@ function TemplateForm({
                       placeholder={input.placeholder ?? ""}
                       onChange={handleFormChange}
                     />
+                    <p className="text-red-500">
+                      {state?.errors &&
+                      Object.hasOwn(state?.errors, input.name) &&
+                      state?.errors[input.name].at(0)
+                        ? state?.errors[input.name].at(0)
+                        : null}
+                    </p>
                   </>
                 );
               }
             })}
           </div>
           <button
-            disabled={!selectedTemplateId}
+            disabled={!selectedTemplateId || pending}
             className={clsx("text-white", { hidden: !selectedTemplateId })}
             type="submit"
           >
