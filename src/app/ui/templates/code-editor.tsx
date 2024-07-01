@@ -16,6 +16,7 @@ function CodeEditor({
       options={{
         autoClosingQuotes: "always",
         fontSize: 14,
+        trimAutoWhitespace: true,
         minimap: { enabled: false },
         contextmenu: false,
       }}

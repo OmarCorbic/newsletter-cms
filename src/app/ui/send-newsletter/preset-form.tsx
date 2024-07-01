@@ -9,7 +9,7 @@ function PresetForm({
 }) {
   return (
     <>
-      <div className="w-1/3 bg-slate-950 rounded-lg overflow-hidden p-5">
+      <div className="w-1/3 bg-slate-950 rounded-lg overflow-hidden p-5 text-black  ">
         <form action="">
           <select
             className="w-full py-2 px-3 rounded-sm font-medium text-lg cursor-pointer"

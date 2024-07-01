@@ -26,7 +26,7 @@ function SideNav() {
           <form action={signOut}>
             <button
               type="submit"
-              className="flex h-[48px] grow items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-blue-900 hover:text-white text-white md:flex-none md:justify-start md:p-2 md:px-3"
+              className="flex h-[48px] w-full items-center justify-center gap-2 rounded-md p-3 text-sm font-medium hover:bg-blue-900 hover:text-white text-white md:flex-none md:justify-start md:p-2 md:px-3"
             >
               <IoLogOutOutline size={25} />
               Sign out
