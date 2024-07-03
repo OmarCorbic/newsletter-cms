@@ -75,6 +75,138 @@ const SendNewsletterPayloadSchema = z.object({
   }),
 });
 
+export async function createGroup(_currentState: unknown, formData: FormData) {
+  const session = await getSession();
+  const userId = session?.user?.id || "";
+
+  const name: string = formData.get("groupName")?.toString() || "";
+  if (!name || name?.length < 4) {
+    return {
+      message: "Invalid Name. Name must be at least 4 characters long",
+      success: false,
+    };
+  }
+
+  try {
+    const results: any = await query(
+      "SELECT name FROM user_groups WHERE user_id=? AND name=?",
+      [userId, name]
+    );
+
+    if (results.length > 0) {
+      return {
+        message: "Group with that name already exists",
+        success: false,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Database Error. Failed to find user group",
+      success: false,
+    };
+  }
+
+  try {
+    await query("INSERT INTO user_groups (user_id, name) VALUES (?, ?)", [
+      userId,
+      name,
+    ]);
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Database Error. Failed to create user group",
+      success: false,
+    };
+  }
+
+  revalidatePath("/send-newsletter");
+  return { message: "Group created successfully", success: true };
+}
+
+export async function editGroup(
+  groupId: string,
+  _currentState: unknown,
+  formData: FormData
+) {
+  const session = await getSession();
+  const userId = session?.user?.id || "";
+
+  const name: string = formData.get("groupName")?.toString() || "";
+
+  if (!name || name?.length < 4) {
+    return {
+      message: "Invalid Name. Name must be at least 4 characters long",
+      success: false,
+    };
+  }
+  if (!groupId) {
+    return {
+      message: "Invalid group. Failed to edit group name",
+      success: false,
+    };
+  }
+
+  try {
+    const results: any = await query(
+      "SELECT name FROM user_groups WHERE user_id=? AND name=?",
+      [userId, name]
+    );
+
+    if (results.length > 0) {
+      return {
+        message: "Group with that name already exists",
+        success: false,
+      };
+    }
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Database Error. Failed to find user group",
+      success: false,
+    };
+  }
+
+  try {
+    await query("UPDATE user_groups SET name=? WHERE id=? AND user_id=?", [
+      name,
+      groupId,
+      userId,
+    ]);
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Database Error. Failed to edit user group",
+      success: false,
+    };
+  }
+
+  revalidatePath("/send-newsletter");
+  return { message: "Group edited successfully", success: true };
+}
+
+export async function deleteGroup(groupId: string, _currentState: unknown) {
+  const session = await getSession();
+  const userId = session?.user?.id || "";
+
+  try {
+    await query("DELETE FROM grouped_customers WHERE group_id=?", [groupId]);
+    await query("DELETE FROM user_groups WHERE id=? AND user_id=?", [
+      groupId,
+      userId,
+    ]);
+  } catch (error) {
+    console.log(error);
+    return {
+      message: "Database Error. Failed to delete user group",
+      success: false,
+    };
+  }
+
+  revalidatePath("/send-newsletter");
+  return { message: "Group deleted successfully", success: true };
+}
+
 export async function createTemplate(
   payload: CreateTemplatePayload,
   _currentState: unknown,
@@ -154,6 +286,7 @@ export async function createTemplate(
   }
 
   revalidatePath("/dashboard/templates");
+  revalidatePath("/dashboard/send-newsletter");
   return { message: `Template created successfully`, success: true };
 }
 
@@ -249,7 +382,7 @@ export async function editTemplate(
   }
 
   revalidatePath("/dashboard/templates");
-  revalidatePath(`/dashboard/templates/${templateId}/edit`);
+  revalidatePath("/dashboard/send-newsletter");
   return { message: `Template updated successfully`, success: true };
 }
 
@@ -350,5 +483,5 @@ export async function signOut() {
     console.log(error);
     return;
   }
-  redirect("/");
+  redirect("/login");
 }
