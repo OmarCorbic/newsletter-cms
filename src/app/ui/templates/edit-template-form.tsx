@@ -2,7 +2,7 @@
 import { Template } from "@/app/lib/definitions";
 import { useEffect, useState } from "react";
 import CodeEditor from "./code-editor";
-import Preview from "../send-newsletter/preview";
+import CodePreview from "../send-newsletter/preview";
 import { LuCode2 } from "react-icons/lu";
 import { VscSplitHorizontal } from "react-icons/vsc";
 import { MdOutlinePreview, MdOutlineEdit } from "react-icons/md";
@@ -169,7 +169,7 @@ function EditForm({ template }: { template: Template }) {
             }
           )}
         >
-          <Preview
+          <CodePreview
             message="Preview will be shown after you start writing code"
             templateHTML={code}
           />

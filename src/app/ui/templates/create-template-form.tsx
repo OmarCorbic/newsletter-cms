@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import CodeEditor from "./code-editor";
-import Preview from "../send-newsletter/preview";
 import { LuCode2 } from "react-icons/lu";
 import { VscSplitHorizontal } from "react-icons/vsc";
 import { MdOutlinePreview } from "react-icons/md";
@@ -11,6 +10,7 @@ import clsx from "clsx";
 import { useFormState, useFormStatus } from "react-dom";
 import toast from "react-hot-toast";
 import { createTemplate } from "@/app/lib/actions";
+import CodePreview from "../send-newsletter/preview";
 
 const codeView = { code: true, split: false, preview: false };
 const splitView = { code: false, split: true, preview: false };
@@ -150,7 +150,7 @@ function CreateForm() {
             }
           )}
         >
-          <Preview
+          <CodePreview
             message="Preview will be shown after you start writing code"
             templateHTML={code}
           />
