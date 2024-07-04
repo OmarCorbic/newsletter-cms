@@ -1,6 +1,6 @@
 import { fetchTemplateById } from "@/app/lib/data";
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import EditForm from "@/app/ui/templates/edit-form";
+import EditForm from "@/app/ui/templates/edit-template-form";
 
 async function Page({ params }: { params: { id: string } }) {
   const id = params.id;

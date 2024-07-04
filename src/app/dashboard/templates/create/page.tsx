@@ -1,5 +1,5 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import CreateForm from "@/app/ui/templates/create-form";
+import CreateForm from "@/app/ui/templates/create-template-form";
 
 function Page() {
   return (
