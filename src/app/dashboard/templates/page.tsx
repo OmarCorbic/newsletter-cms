@@ -1,3 +1,4 @@
+import { TemplatesSkeleton } from "@/app/ui/skeletons";
 import TemplatesWrapper from "@/app/ui/templates/templates";
 import Link from "next/link";
 import { Suspense } from "react";
@@ -14,7 +15,7 @@ async function Page() {
           Create a new
         </Link>
       </div>
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<TemplatesSkeleton />}>
         <TemplatesWrapper />
       </Suspense>
     </main>
