@@ -12,6 +12,7 @@ import clsx from "clsx";
 import { editTemplate } from "@/app/lib/actions";
 import { useFormState, useFormStatus } from "react-dom";
 import toast from "react-hot-toast";
+import Button from "../button";
 
 const codeView = { code: true, split: false, preview: false };
 const splitView = { code: false, split: true, preview: false };
@@ -134,13 +135,9 @@ function EditForm({ template }: { template: Template }) {
             </button>
           </div>
           <div className="flex items-center justify-end">
-            <button
-              disabled={pending}
-              className="bg-blue-800 w-32 h-11 font-bold px-5 rounded-md flex items-center justify-center"
-              type="submit"
-            >
+            <Button disabled={pending} type="submit">
               Save
-            </button>
+            </Button>
           </div>
         </div>
       </form>
