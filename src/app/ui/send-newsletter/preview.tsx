@@ -32,12 +32,14 @@ const ALLOWED_TAGS: string[] = [
   "hr",
 ];
 
-function Preview({
+function CodePreview({
   templateHTML,
   formState,
+  message = "Preview will be shown after you choose a template or a preset",
 }: {
   templateHTML?: string;
   formState?: any;
+  message?: string;
 }) {
   const previewRef: any = useRef(null);
 
@@ -66,17 +68,15 @@ function Preview({
   return (
     <div ref={previewRef} className=" h-full overflow-y-auto">
       <div className="flex items-center justify-center h-full">
-        <div className="flex items-center justify-center flex-col  p-20 w-1/2 gap-3">
+        <div className="flex items-center justify-center flex-col  p-20 w-2/3 gap-3">
           <div className="border-2 rounded-lg flex items-center justify-center p-8">
             <HiOutlineArrowUpOnSquareStack size={100} />
           </div>
-          <p className=" text-center font-bold text-lg">
-            Preview will be shown after you choose a template or a preset
-          </p>
+          <p className=" text-center font-bold text-lg">{message}</p>
         </div>
       </div>
     </div>
   );
 }
 
-export default Preview;
+export default CodePreview;
