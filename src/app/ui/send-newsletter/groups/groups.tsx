@@ -13,10 +13,15 @@ import { ImUserPlus } from "react-icons/im";
 import Link from "next/link";
 import SingleGroup from "./group";
 import CreateGroupForm from "./create-group-form";
+import AddCustomerForm from "../add-customer-form";
+import Modal from "../../modal";
+import Button from "../../button";
 
 function CustomerGroups({ groups }: { groups: Group[] }) {
+  const [showAddModal, setShowAddModal] = useState(false);
   const [showRemainingGroups, setShowRemainingGroups] = useState(false);
   const [newGroup, setNewGroup] = useState(false);
+
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
@@ -25,8 +30,16 @@ function CustomerGroups({ groups }: { groups: Group[] }) {
     const params = new URLSearchParams(searchParams);
     params.set("group", id);
 
-    replace(`${pathname}?${params.toString()}`);
+    replace(`${pathname}?${params.toString()}`, { scroll: false });
   };
+
+  const hideModal = () => {
+    setShowAddModal(false);
+  };
+
+  useEffect(() => {
+    setNewGroup(false);
+  }, [groups.length]);
 
   // useEffect(() => {
   //   const hideGroups = () => {
@@ -43,18 +56,19 @@ function CustomerGroups({ groups }: { groups: Group[] }) {
         <span className="text-lg">Your groups</span>{" "}
         <div className="flex items-center justify-start flex-grow gap-2">
           {newGroup && <CreateGroupForm />}
-          <button
+          <Button
             onClick={() => setNewGroup((prev) => !prev)}
             type="button"
-            className="bg-blue-800 w-8 h-8 mr-auto rounded-full flex items-center justify-center"
+            className="w-8 h-8 px-0 py-0 mr-auto rounded-full flex items-center justify-center"
           >
             {newGroup ? <LuUndo2 /> : <IoMdAdd />}
-          </button>
+          </Button>
         </div>
       </div>
       <div className="flex flex-row justify-between gap-1 py-2 flex-wrap">
         <div className="flex gap-1 relative flex-wrap">
           <Link
+            scroll={false}
             className={clsx(
               "relative flex items-center justify-center rounded-md h-10 text-sm font-medium hover:bg-blue-900 hover:text-white w-32 text-white group ",
               {
@@ -125,11 +139,18 @@ function CustomerGroups({ groups }: { groups: Group[] }) {
             </>
           )}
         </div>
-
-        <button className="bg-blue-800 gap-2 px-5 rounded-md flex items-center justify-center">
+        {showAddModal && (
+          <Modal onClick={hideModal}>
+            <AddCustomerForm hideModal={hideModal} />
+          </Modal>
+        )}
+        <Button
+          className="flex flex-row items-center gap-2"
+          onClick={() => setShowAddModal(true)}
+        >
           <span>Add customer</span>
           <ImUserPlus />
-        </button>
+        </Button>
       </div>
     </div>
   );

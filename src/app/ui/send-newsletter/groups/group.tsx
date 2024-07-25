@@ -5,9 +5,11 @@ import clsx from "clsx";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import { MdOutlineEdit } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 import EditGroupForm from "./edit-group-form";
 import DeleteGroupForm from "./delete-group-form";
+import Link from "next/link";
 
 type Props = {
   onClick: (id: string) => void;
@@ -86,7 +88,7 @@ function SingleGroup({ onClick, active, group }: Props) {
         <BsThreeDotsVertical />
       </button>
       {showOptions && (
-        <div className="absolute flex-col flex rounded-md w-32 top-0 left-full overflow-hidden z-[2]">
+        <div className="absolute flex-col flex rounded-md w-44 top-0 left-full overflow-hidden z-[2] gap-[1px]">
           <button
             onClick={() => {
               setEditName(true);
