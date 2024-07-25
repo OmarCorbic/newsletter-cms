@@ -1,5 +1,5 @@
-import SideNav from "../ui/dashboard/sidenav";
 import { Toaster } from "react-hot-toast";
+import SideNav from "../ui/dashboard/sidenav";
 
 const Layout = async ({
   children,
@@ -7,7 +7,7 @@ const Layout = async ({
   children: React.ReactNode;
 }>) => {
   return (
-    <div className="w-full h-screen flex flex-row gap-2 overflow-hidden  bg-slate-800 text-white">
+    <div className="w-full h-screen relative flex flex-row gap-2 overflow-hidden  bg-slate-800 text-white">
       <Toaster />
       <div className="flex flex-col min-w-44 bg-slate-900">
         <SideNav />

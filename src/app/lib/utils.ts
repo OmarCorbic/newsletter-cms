@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify } from "jose";
-import DOMPurify from "dompurify";
+import { Input } from "./definitions";
 
 const secretKey = process.env.JWT_SECRET;
 const key = new TextEncoder().encode(secretKey);
@@ -19,7 +19,7 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
-export function injectDataIntoHTML(data: any, html: string) {
+export function injectDataIntoHTML(data: any, html: string): string {
   const regex = /{{(.*?)}}/g;
   const readyHTML = html.replace(regex, (_, key) => {
     if (Object.prototype.hasOwnProperty.call(data, key)) {

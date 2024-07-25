@@ -1,4 +1,5 @@
 "use client";
+import { Customer } from "@/app/lib/definitions";
 import { LuSearchX } from "react-icons/lu";
 
 function Table({
@@ -8,7 +9,7 @@ function Table({
   checkSingle,
 }: {
   checked: { id: string; email: string }[];
-  customers: any[];
+  customers: Customer[];
   checkAll: (checked: boolean) => void;
   checkSingle: (id: string) => void;
 }) {
