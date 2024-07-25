@@ -8,9 +8,9 @@ export type User = {
 
 export type Customer = {
   id: string;
+  name: string;
   email: string;
   company: string;
-  checked?: boolean;
 };
 
 export type Input = {
@@ -23,7 +23,6 @@ export type Input = {
 export type Template = {
   id: string;
   name: string;
-  userId: string;
   inputs: Input[];
   html: string;
 };
@@ -31,12 +30,10 @@ export type Template = {
 export type Preset = {
   id: string;
   name: string;
-  userId: string;
   html: string;
 };
 
 export type Group = {
   id: string;
   name: string;
-  userId: string;
 };
