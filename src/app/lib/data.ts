@@ -33,21 +33,15 @@ export async function fetchFilteredCustomers(
     throw new Error("Database Error: Failed to fetch filtered customers");
   }
 }
-export async function fetchGroupedCustomers(): Promise<Customer[]> {
+export async function fetchAllCustomers(): Promise<Customer[]> {
   noStore();
   try {
-    const session = await getSession();
-    const userId = session?.user?.id || "";
-    const results: any = await query(
-      "SELECT * FROM grouped_customers JOIN CUSTOMERS",
-      [userId]
-    );
-
+    const results: any = await query("SELECT * FROM customers", []);
     const customers: Customer[] = [...results];
     return customers;
   } catch (error: any) {
     console.log(error);
-    throw new Error("Database Error: Failed to fetch grouped customers");
+    throw new Error("Database Error: Failed to fetch customers");
   }
 }
 
@@ -58,7 +52,7 @@ export async function fetchUserGroups(): Promise<Group[]> {
     const userId = session?.user?.id || "";
 
     const results: any = await query(
-      "SELECT * FROM user_groups WHERE user_id=?",
+      "SELECT id, name FROM user_groups WHERE user_id=?",
       [userId]
     );
 
@@ -76,7 +70,7 @@ export async function fetchTemplates(): Promise<Template[]> {
     const session = await getSession();
     const userId = session?.user?.id || "";
     const results: any = await query(
-      "SELECT * FROM templates WHERE user_id=?",
+      "SELECT id,name,html,inputs FROM templates WHERE user_id=?",
       [userId]
     );
 
@@ -94,9 +88,10 @@ export async function fetchTemplates(): Promise<Template[]> {
 export async function fetchTemplateById(templateId: string): Promise<Template> {
   noStore();
   try {
-    const results: any = await query("SELECT * FROM templates WHERE id=?", [
-      templateId,
-    ]);
+    const results: any = await query(
+      "SELECT id,name,html,inputs FROM templates WHERE id=?",
+      [templateId]
+    );
 
     if (results.length < 1) throw new Error("Template doesn't exist");
 
@@ -114,9 +109,10 @@ export async function fetchPresets(): Promise<Preset[]> {
   try {
     const session = await getSession();
     const userId = session?.user?.id || "";
-    const results: any = await query("SELECT * FROM presets WHERE user_id=?", [
-      userId,
-    ]);
+    const results: any = await query(
+      "SELECT id,name,html FROM presets WHERE user_id=?",
+      [userId]
+    );
 
     const presets: Preset[] = [...results];
     return presets;
