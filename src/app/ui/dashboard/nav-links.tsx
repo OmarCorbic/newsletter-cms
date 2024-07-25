@@ -3,7 +3,7 @@
 import { clsx } from "clsx";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { TbTemplate, TbHome, TbMailCheck, TbMailForward } from "react-icons/tb";
+import { TbTemplate, TbHome, TbMailForward } from "react-icons/tb";
 
 export default function NavLinks() {
   const links = [
@@ -13,7 +13,6 @@ export default function NavLinks() {
       name: "Send newsletter",
       icon: TbMailForward,
     },
-    { href: "/dashboard/presets", name: "Presets", icon: TbMailCheck },
     { href: "/dashboard/templates", name: "Templates", icon: TbTemplate },
   ];
 
